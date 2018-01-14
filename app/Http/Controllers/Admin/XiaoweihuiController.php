@@ -41,7 +41,8 @@ class XiaoweihuiController extends Controller
                 'is_connect' => $request -> input('is_connect'),
                 'guimo' => '',
                 'content' => $request -> input('content'),
-                'wx_name' => $request -> input('wx_name')
+                'wx_name' => $request -> input('wx_name'),
+                'invitcode' => $request -> input('invitcode')
             ]);
             if($update_res){
                 echo 'success';
@@ -60,7 +61,8 @@ class XiaoweihuiController extends Controller
             'content' => $request -> input('content'),
             'wx_name' => $request -> input('wx_name'),
             'add_user' => $request -> input('add_user'),
-            'created_at' => time()
+            'created_at' => time(),
+            'invitcode' => $request -> input('invitcode')
         ]);
 
 
