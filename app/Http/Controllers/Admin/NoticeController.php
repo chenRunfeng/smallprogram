@@ -56,7 +56,7 @@ class NoticeController extends Controller
                 ->update([
                     'title' => $request -> input('title'),
                     'content' => $request -> input('content'),
-                    'editTime' => $request -> time(),
+                    'editTime' => time(),
                     'zhidingNum' => $zhiding,
                 ]);
             if($update_res){
