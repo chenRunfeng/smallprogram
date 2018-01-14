@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class XiaoweihuiController extends Controller
 {
@@ -93,6 +94,20 @@ class XiaoweihuiController extends Controller
         $res -> activitys = DB::table('activity') -> where([
             'xiaoyou_id' => $res -> id
         ]) -> get();
+        //校友会相关公告
+        $res -> noticelist = DB::table('notice') ->select(DB::raw('* , from_unixtime(createTime,\'%Y-%m-%d\') as create_time'))
+            -> where([
+            'xiaoyouid' => $res -> id,
+                'flag' => 0
+        ]) ->orderBy('zhidingNum', 'desc')->orderBy('createTime', 'desc')
+            -> get();
+        $res -> newjoin = DB::table('list as t1') ->select('t2.*','t3.name as zhuanye_name')
+            -> where([
+            'xiaoyou_id' => $res -> id
+        ]) ->leftJoin('user as t2', 't1.openid', '=', 't2.openid')
+            ->leftJoin('setting as t3', 't2.zhuanye_id', '=', 't3.id')
+            ->orderBy('t1.created_at', 'desc')
+            -> first();
         $weekarray=array("星期日","星期一","星期二","星期三","星期四","星期五","星期六");
         if(count($res -> activitys)){
             foreach($res -> activitys as $k =>$vo){
@@ -174,16 +189,19 @@ class XiaoweihuiController extends Controller
         $type = $request -> input('type');
 
         //$type 1 行业 2 专业 3 年级
-        $res = DB::table('list') -> where([
+        $res = DB::table('list as t1') ->select('t1.*')
+            ->leftJoin('user as t2', 't1.openid', '=', 't2.openid')
+            -> where([
             'xiaoyou_id' => $id
-        ]) -> get();
+        ]) ->orderBy('t2.school_time', 'asc')
+            -> get();
 
         if($res){
             //得到全部的通讯录数据
             foreach($res as $k => $vo){
                 $res[$k] -> userinfo  = DB::table('user') -> where([
                     'openid' => $vo -> openid
-                ]) -> first();
+                ])-> first();
             }
             //var_dump($res);
             //根据通讯录数据分类
@@ -280,7 +298,35 @@ class XiaoweihuiController extends Controller
             echo 'error';
         }
     }
+    public function exportXiaoweihui($id){
+        set_time_limit(0);
+        $res_arr[] = ['姓名','电话','学校','入学年份','专业','班级','工作单位','行业','职位'];
+        $xiaoyouhui = DB::table('xiaoyouhui') -> where([
+            'id' => $id
+        ]) -> first();
+        $openids_temp = DB::table('list as t1')
+            ->leftJoin('user as t2', 't1.openid', '=', 't2.openid')
+            ->leftJoin('setting as t3', 't2.zhuanye_id', '=', 't3.id')
+            ->leftJoin('school as t4', 't2.school_id', '=', 't4.id')
+            ->leftJoin('setting as t5', 't2.hangye', '=', 't5.id')
+            -> where([
+            't1.xiaoyou_id' => $id
+        ])->select('t2.name','t2.tel','t4.schoolname as sehoolname','t2.school_time','t3.name AS zhuanyename','t2.banji','t2.company','t5.name AS hangyename','t2.zhiwei')
+            ->orderBy('school_time', 'desc')
+            -> get();
+        foreach($openids_temp as $k => $vo){
+            $res_arr[] = [$vo -> name,$vo->tel,$vo->sehoolname,$vo->school_time,$vo->zhuanyename,$vo->banji,$vo->company,$vo->hangyename,$vo->zhiwei];
+        }
+        $name = $xiaoyouhui->name . '人数统计';
+        Excel::create($name.date('Y-m-d'),function($excel) use ($res_arr,$name){
+            $excel->sheet($name, function($sheet) use ($res_arr){
+                $sheet->rows($res_arr);
+            });
+        })->export('xls');
 
+
+        //dd($res);
+    }
 
 
 

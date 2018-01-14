@@ -67,21 +67,32 @@ Route::any('/getopenID', 'Admin\UserController@getopenID');
 //Richer 上传图片
 Route::any('/saveImg','Admin\ActivityController@saveImg');
 
+//添加/更新公告
+Route::any('/addNotice', 'Admin\NoticeController@addNotice');
+//删除公告
+Route::any('/deleteNotice', 'Admin\NoticeController@deleteNotice');
+//查询公告
+Route::any('/getNotice', 'Admin\NoticeController@getNotice');
+//查询邀请码
+Route::any('/getInvotCode', 'Admin\SettingController@getInvotCode');
 
 
+
+
+//Route::group(['as' => 'setting','middleware' => ['checklogin']], function () {
+//    Route::any('/admin/setting/{type}', 'Admin\SettingController@index');
+//
+//    Route::any('/admin/addSettingRes', 'Admin\SettingController@addSettingRes');
+//    Route::any('/admin/deleteSetting/{id}/{type}', 'Admin\SettingController@deleteSetting');
+//});
 
 
 Route::group(['as' => 'setting','middleware' => ['checklogin']], function () {
     Route::any('/admin/setting/{type}', 'Admin\SettingController@index');
-
-    Route::any('/admin/addSettingRes', 'Admin\SettingController@addSettingRes');
-    Route::any('/admin/deleteSetting/{id}/{type}', 'Admin\SettingController@deleteSetting');
-});
-
-
-Route::group(['as' => 'setting','middleware' => ['checklogin']], function () {
-    Route::any('/admin/setting/{type}', 'Admin\SettingController@index');
-
+    Route::any('/admin/invitcodeSetting', 'Admin\SettingController@invitcodeSetting');
+    Route::any('/admin/addInvitCode', 'Admin\SettingController@addInvitCode');
+    Route::any('/admin/deleteInvitCode/{id}', 'Admin\SettingController@deleteInvitCode');
+    Route::any('/admin/setInvitLose/{id}', 'Admin\SettingController@setInvitLose');
     Route::any('/admin/addSettingRes', 'Admin\SettingController@addSettingRes');
     Route::any('/admin/deleteSetting/{id}/{type}', 'Admin\SettingController@deleteSetting');
 });
@@ -97,7 +108,7 @@ Route::group(['as' => 'school','middleware' => ['checklogin']], function () {
 
 Route::group(['as' => 'xiaoweihui','middleware' => ['checklogin']], function () {
     Route::any('/admin/xiaoweihui', 'Admin\XiaoweihuiController@index');
-
+    Route::any('/admin/exportXiaoweihui/{id}', 'Admin\XiaoweihuiController@exportXiaoweihui');
 });
 
 Route::group(['as' => 'user','middleware' => ['checklogin']], function () {

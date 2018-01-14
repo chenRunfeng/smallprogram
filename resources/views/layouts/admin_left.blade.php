@@ -56,7 +56,7 @@
                 <li><a href="{{url('admin/setting/0')}}">专业信息</a></li>
                 <li><a href="{{url('admin/setting/1')}}">行业（职业）信息</a></li>
                 <li><a href="{{url('admin/setting/2')}}">爱好标签</a></li>
-                <li><a href="{{url('admin/setting/3')}}">邀请码管理</a></li>
+                <li><a href="{{url('admin/invitcodeSetting')}}">邀请码管理</a></li>
             </ul>
         </li>
         <li @if(Route::currentRouteName() == 'school' )class="active" @endif ><a href="{{ url('admin/school') }}"   >学校管理</a>

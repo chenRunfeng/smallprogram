@@ -36,7 +36,7 @@
                             <td>{{$vo -> user_info -> name}}</td>
                             <td>{{$vo -> content}}</td>
                             <td>{{ date('Y-m-d H:i',$vo -> created_at) }}</td>
-                            <td></td>
+                            <td><a href="{{ url('admin/exportXiaoweihui').'/'.$vo -> id }}" style="background-color:lightgreen;">导出名单</a></td>
                         </tr>
                     @endforeach
                 @endunless

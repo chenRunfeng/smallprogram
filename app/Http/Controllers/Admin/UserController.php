@@ -34,8 +34,13 @@ class UserController extends Controller
     }
 
     public function userdetail($id){
-        $res = DB::table('user') -> where([
-            'id' => $id
+        $res = DB::table('user as t1')
+            ->leftJoin('school as t2', 't1.school_id', '=', 't2.id')
+            ->leftJoin('setting as t3', 't1.zhuanye_id', '=', 't3.id')
+            ->leftJoin('setting as t4', 't1.hangye', '=', 't4.id')
+            ->select('t1.*', 't2.schoolname', 't3.name as zhuanye_name', 't4.name as hangye_name')
+            -> where([
+            't1.id' => $id
         ]) -> first();
         return view('admin/user/userdetail') -> with([
             'res' => $res

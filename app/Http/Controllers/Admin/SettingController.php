@@ -65,4 +65,80 @@ class SettingController extends Controller
             ]);
         }
     }
+    public function invitcodeSetting(){
+        $res = DB::table('invitcode')  -> where([
+            'flag' => 0
+        ])-> paginate(15);
+        return view('admin/setting/invitcode') -> with([
+            'res' => $res
+        ]);
+    }
+    //添加邀请码
+    public function addInvitCode(Request $request){
+        //先查有没有重复
+        $isset = DB::table('invitcode') -> where([
+            'code' => $request -> input('invitcode')
+        ]) -> first();
+        if($isset){
+            return redirect('admin/invitcodeSetting') -> with([
+                'isset' => 'yes'
+            ]);
+        }
+        DB::table('invitcode') -> insert([
+            'code' => $request -> input('invitcode'),
+            'creater' => 'admin',
+            'createTime' => time(),
+            'islose' => 0,
+            'flag' => 0
+        ]);
+        return redirect('admin/invitcodeSetting') -> with('insertres','success');
+    }
+    //删除邀请码
+    public function deleteInvitCode($id){
+        $update_res = DB::table('invitcode') -> where([
+            'id' => $id
+        ]) -> update([
+            'flag' => 1
+        ]);
+        if($update_res){
+            return redirect('admin/invitcodeSetting') -> with([
+                'deleteres' => 'yes'
+            ]);
+        }
+    }
+    //设为有效或者无效
+    public function setInvitLose($id){
+        //先查状态
+        $invit = DB::table('invitcode') -> where([
+            'id' => $id
+        ]) -> first();
+        if($invit->islose == 0){
+           $lose = 1;
+        }else{
+            $lose = 0;
+        }
+        $update_res = DB::table('invitcode') -> where([
+            'id' => $id
+        ]) -> update([
+            'islose' => $lose
+        ]);
+        if($update_res){
+            return redirect('admin/invitcodeSetting') -> with([
+                'setres' => 'yes'
+            ]);
+        }else{
+            return redirect('admin/invitcodeSetting') -> with([
+                'setfail' => 'yes'
+            ]);
+        }
+    }
+    //设为有效或者无效
+    public function getInvotCode(){
+        //先查状态
+        $invitres = DB::table('invitcode') -> where([
+            'islose' => 0,
+            'flag' => 0,
+        ]) ->pluck('code');
+        return response() -> json($invitres);
+    }
 }
