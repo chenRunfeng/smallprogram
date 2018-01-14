@@ -23,7 +23,12 @@ class NoticeController extends Controller
             $zhiding = 0;
             if ($request -> input('zhiding') != 0){
                 $notice = DB::table('notice')->where('zhidingNum', '<>', 0)->orderBy('zhidingNum', 'desc')->first();
-                $zhiding = intval($notice->zhidingNum) + 1;
+                if($notice){
+                    $zhiding = intval($notice->zhidingNum) + 1;
+                }else{
+                    $zhiding = 1;
+                }
+
             }
             $id_res = DB::table('notice') -> insertGetId([
                 'title' => $request -> input('title'),
