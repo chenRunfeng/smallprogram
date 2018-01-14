@@ -35,7 +35,7 @@ class NoticeController extends Controller
                 'content' => $request -> input('content'),
                 'xiaoyouid' => $request -> input('xiaoyou_id'),
                 'creater' => $request -> input('openid'),
-                'createTime' => $request -> time(),
+                'createTime' =>time(),
                 'zhidingNum' => $zhiding,
                 'flag' => 0
             ]);
