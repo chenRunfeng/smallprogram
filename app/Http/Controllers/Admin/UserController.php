@@ -68,6 +68,7 @@ class UserController extends Controller
             'birthday' => $request -> input('birthday'),
             'aihao' => $request -> input('aihao'),
             'headImg' => $request -> input('headImg'),
+            'isopen' => $request -> input('isopen'),
             'created_at' => time(),
         ]);
         if($res){
