@@ -37,6 +37,8 @@ Route::any('/searchXiaoyou', 'Admin\XiaoweihuiController@searchXiaoyou');
 Route::any('/deleteXiaoyouhui/{id}', 'Admin\XiaoweihuiController@deleteXiaoyouhui');
 //加入校友会
 Route::any('/apiEnterXiaoyou', 'Admin\XiaoweihuiController@apiEnterXiaoyou');
+//加入校友会
+Route::any('/getXiaoyouhuiManage/{id}', 'Admin\XiaoweihuiController@getXiaoyouhuiManage');
 
 
 

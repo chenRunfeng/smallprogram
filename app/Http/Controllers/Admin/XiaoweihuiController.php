@@ -329,6 +329,18 @@ class XiaoweihuiController extends Controller
 
         //dd($res);
     }
+    public function getXiaoyouhuiManage($id){
+        $res = DB::table('list') -> where([
+            'xiaoyou_id' => $id,
+            'is_manage' => 1,
+            'flag' => 0
+        ]) -> first();
+        if($res){
+            return response() -> json($res);
+        }else{
+            return 'error';
+        }
+    }
 
 
 
