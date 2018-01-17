@@ -95,7 +95,8 @@ class NoticeController extends Controller
                 -> where([
                 'xiaoyouid' => $request -> input('xiaoyou_id'),
                 'flag' => 0
-            ]) ->get();
+            ]) ->orderBy('zhidingNum', 'desc')->orderBy('createTime', 'desc')
+                ->get();
         }
         return response() -> json($notice);
     }

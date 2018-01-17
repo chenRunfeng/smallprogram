@@ -101,7 +101,7 @@ class XiaoweihuiController extends Controller
             -> where([
             'xiaoyouid' => $res -> id,
                 'flag' => 0
-        ]) ->orderBy('zhidingNum', 'desc')->orderBy('createTime', 'desc')
+        ]) ->limit(2)->orderBy('zhidingNum', 'desc')->orderBy('createTime', 'desc')
             -> get();
         $res -> newjoin = DB::table('list as t1') ->select('t2.*','t3.name as zhuanye_name')
             -> where([
