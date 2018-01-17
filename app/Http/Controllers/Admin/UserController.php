@@ -49,6 +49,10 @@ class UserController extends Controller
 
     //编辑用户名片提交接口
     public function apiEditUser(Request $request){
+        $isopen = 0;
+        if($request -> input('isopen')){
+            $isopen = $request -> input('isopen');
+        }
         $res = DB::table('user') -> where([
             'openid' => $request -> input('openid')
         ]) -> update([
@@ -68,7 +72,7 @@ class UserController extends Controller
             'birthday' => $request -> input('birthday'),
             'aihao' => $request -> input('aihao'),
             'headImg' => $request -> input('headImg'),
-            'isopen' => $request -> input('isopen'),
+            'isopen' => $isopen,
             'created_at' => time(),
         ]);
         if($res){
