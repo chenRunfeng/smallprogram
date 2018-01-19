@@ -37,6 +37,7 @@ class NoticeController extends Controller
                 'creater' => $request -> input('openid'),
                 'createTime' =>time(),
                 'zhidingNum' => $zhiding,
+                'images' => $request -> input('images'),
                 'flag' => 0
             ]);
             if($id_res){
@@ -58,6 +59,7 @@ class NoticeController extends Controller
                     'content' => $request -> input('content'),
                     'editTime' => time(),
                     'zhidingNum' => $zhiding,
+                    'images' => $request -> input('images'),
                 ]);
             if($update_res){
                 echo 'success';
