@@ -189,13 +189,22 @@ class XiaoweihuiController extends Controller
     public function apiXiaoyouDetail(Request $request){
         $id = $request -> input('id');
         $type = $request -> input('type');
+        $nowPage = $request -> input('nowPage');
+        $pageNum = $request -> input('pageNum');
 
+        if($type == 1){
+            $orderBy = 't2.hangye';
+        }elseif($type == 2){
+            $orderBy = 't2.zhuanye_id';
+        }elseif($type == 3){
+            $orderBy = 't2.school_time';
+        }
         //$type 1 行业 2 专业 3 年级
         $res = DB::table('list as t1') ->select('t1.*')
             ->leftJoin('user as t2', 't1.openid', '=', 't2.openid')
             -> where([
-            'xiaoyou_id' => $id
-        ]) ->orderBy('t2.school_time', 'asc')
+                'xiaoyou_id' => $id
+            ]) ->forPage($nowPage, $pageNum)->orderBy($orderBy, 'asc')->orderBy('t2.school_time', 'asc')
             -> get();
 
         if($res){
