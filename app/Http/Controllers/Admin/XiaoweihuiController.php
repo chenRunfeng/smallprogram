@@ -186,7 +186,7 @@ class XiaoweihuiController extends Controller
     }
 
     //通过校友会id 返回通讯录
-    public function apiXiaoyouDetail(Request $request){
+    public function apiXiaoyouDetail2(Request $request){
         $id = $request -> input('id');
         $type = $request -> input('type');
         $nowPage = $request -> input('nowPage');
@@ -206,7 +206,6 @@ class XiaoweihuiController extends Controller
                 'xiaoyou_id' => $id
             ]) ->forPage($nowPage, $pageNum)->orderBy($orderBy, 'asc')->orderBy('t2.school_time', 'asc')
             -> get();
-
         if($res){
             //得到全部的通讯录数据
             foreach($res as $k => $vo){
@@ -226,29 +225,77 @@ class XiaoweihuiController extends Controller
                         $key_temp = DB::table('setting')  -> where([
                             'id' => $id_temp
                         ]) -> first() -> name;
-                    break;
+                        break;
                     //专业分类
                     case 2:
                         $id_temp = $val -> userinfo -> zhuanye_id;
                         $key_temp = DB::table('setting') -> where([
                             'id' => $id_temp
                         ]) -> first() -> name;
-                    break;
+                        break;
                     //年级分类
                     case 3:
                         $key_temp = $val -> userinfo -> school_time . '级';
-                    break;
+                        break;
 
                 }
                 //var_dump($type);exit;
 
+                $newarr[$key_temp][] = $val;
+            }
+            return response() -> json($newarr);
+        }
+
+    }
+    //通过校友会id 返回通讯录
+    public function apiXiaoyouDetail(Request $request){
+        $id = $request -> input('id');
+        $type = $request -> input('type');
+        //$type 1 行业 2 专业 3 年级
+        $res = DB::table('list as t1') ->select('t1.*')
+            ->leftJoin('user as t2', 't1.openid', '=', 't2.openid')
+            -> where([
+                'xiaoyou_id' => $id
+            ]) ->orderBy('t2.school_time', 'asc')
+            -> get();
+        if($res){
+            //得到全部的通讯录数据
+            foreach($res as $k => $vo){
+                $res[$k] -> userinfo  = DB::table('user') -> where([
+                    'openid' => $vo -> openid
+                ])-> first();
+            }
+            //var_dump($res);
+            //根据通讯录数据分类
+            $newarr = [];
+            foreach($res as $key => $val){
+                switch ($type){
+                    //按照行业分类
+                    case 1:
+                        $id_temp = $val -> userinfo -> hangye;
+                        $key_temp = DB::table('setting')  -> where([
+                            'id' => $id_temp
+                        ]) -> first() -> name;
+                        break;
+                    //专业分类
+                    case 2:
+                        $id_temp = $val -> userinfo -> zhuanye_id;
+                        $key_temp = DB::table('setting') -> where([
+                            'id' => $id_temp
+                        ]) -> first() -> name;
+                        break;
+                    //年级分类
+                    case 3:
+                        $key_temp = $val -> userinfo -> school_time . '级';
+                        break;
+                }
+                //var_dump($type);exit;
                 $newarr[$key_temp][] = $val;
                 ksort($newarr);
             }
             //var_dump($newarr);exit;
             return response() -> json($newarr);
         }
-
     }
     public function searchXiaoyou(Request $request){
         $id = $request -> input('id');
