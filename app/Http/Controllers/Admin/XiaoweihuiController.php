@@ -204,7 +204,7 @@ class XiaoweihuiController extends Controller
             ->leftJoin('user as t2', 't1.openid', '=', 't2.openid')
             -> where([
                 'xiaoyou_id' => $id
-            ]) ->forPage($nowPage, $pageNum)->orderBy($orderBy, 'asc')->orderBy('t2.school_time', 'asc')
+            ]) ->forPage($nowPage, $pageNum)->orderBy($orderBy, 'asc')->orderBy('t2.school_time', 'asc')->orderBy('t1.id', 'asc')
             -> get();
         if($res){
             //得到全部的通讯录数据
