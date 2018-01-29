@@ -83,6 +83,7 @@ class XiaoweihuiController extends Controller
 
     //通过校友会id 获取校友会详情
     public function getDetailById($id){
+        date_default_timezone_set ('Asia/Shanghai');
         $res = DB::table('xiaoyouhui') -> where([
             'id' => $id
         ]) -> first();
@@ -113,6 +114,12 @@ class XiaoweihuiController extends Controller
         $weekarray=array("星期日","星期一","星期二","星期三","星期四","星期五","星期六");
         if(count($res -> activitys)){
             foreach($res -> activitys as $k =>$vo){
+                $activitydate = $vo -> date . ' ' . $vo -> time;
+                $dateAc = strtotime($activitydate);
+                if(time() > $dateAc) {
+                    unset($res -> activitys[$k]);
+                    break;
+                }
                 $vo -> day = date('d',strtotime($vo -> date));
                 $week = date('w',strtotime($vo -> date));
                 $vo -> week = $weekarray[$week];

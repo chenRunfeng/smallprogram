@@ -56,6 +56,8 @@ Route::any('/apiUserInfo', 'Admin\UserController@apiUserInfo');
 Route::any('/apiAddActivity', 'Admin\ActivityController@apiAddActivity');
 //活动列表
 Route::any('/apiActivityList', 'Admin\ActivityController@apiActivityList');
+//过期活动列表
+Route::any('/apiEndActivityList', 'Admin\ActivityController@apiEndActivityList');
 //删除活动
 Route::any('/deleteActivity/{id}', 'Admin\ActivityController@deleteActivity');
 //活动详情
